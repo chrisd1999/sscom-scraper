@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\AdvertisementAllController;
 use App\Http\Controllers\AdvertisementController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => '/v2'], function () {
     Route::get('/ads', [AdvertisementController::class, 'index']);
+    Route::get('/ads/scrape', [AdvertisementController::class, 'store']);
+    Route::get('/ads/scrape-all', [AdvertisementAllController::class, 'store']);
     Route::get('/ads/{id}', [AdvertisementController::class, 'show']);
-    Route::get('/scrape', [AdvertisementController::class, 'store']);
 });
