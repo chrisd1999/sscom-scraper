@@ -12,14 +12,14 @@ class ScrapeCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'scrape:all';
+    protected $signature = 'scrape:2days';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Scrape all last 2 days adverts';
+    protected $description = 'Scrape last 2 days adverts';
 
     /**
      * Create a new command instance.
