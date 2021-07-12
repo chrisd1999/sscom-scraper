@@ -19,18 +19,18 @@ class AdvertisementController extends Controller
         'PRICE'       => 4,
     ];
 
-    public function index()
+    public function index(): AdvertisementCollection
     {
         return new AdvertisementCollection(Advertisement::all());
     }
 
-    public function show($id)
+    public function show($id): AdvertisementResource
     {
         // return new AdvertisementResource(Advertisement::where('ss_id', $ss_id)->first());
         return new AdvertisementResource(Advertisement::findOrFail($id));
     }
 
-    public function store()
+    public function store(): \Illuminate\Http\JsonResponse
     {
         $url = Config::get('constants.url.last_2days');
 
@@ -39,12 +39,14 @@ class AdvertisementController extends Controller
 
         $tableNodeChildrens->each(function (Crawler $node) {
 
+            // Continue each loop, if there is not a valid advertisement, e.g 
+            // first or last row.
+            if ($node->filter('td .ads_region')->count() <= 0) {
+                return;
+            }
+
             $ss_id = $node->attr('id');
-            
-            if (
-                $node->filter('td .ads_region')->count() <= 0
-                || Advertisement::where('ss_id', $ss_id)->first()
-            ) {
+            if (Advertisement::where('ss_id', $ss_id)->first()) {
                 return false;
             }
 
@@ -66,7 +68,7 @@ class AdvertisementController extends Controller
         return response()->json(['status' => 201]);
     }
 
-    private function getMotorcycleFields(Crawler $node)
+    private function getMotorcycleFields(Crawler $node): array
     {
         return $node->filter('.pp6')->each(
             fn (Crawler $node, $i) => $node->text()
