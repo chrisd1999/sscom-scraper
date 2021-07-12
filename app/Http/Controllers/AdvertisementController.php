@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\AdvertisementCollection;
 use App\Http\Resources\AdvertisementResource;
+use App\Jobs\CreateAdvertisement;
 use App\Models\Advertisement;
 use App\Services\Scraper;
 use Illuminate\Support\Facades\Config;
@@ -26,16 +27,9 @@ class AdvertisementController extends Controller
     public function store(): \Illuminate\Http\JsonResponse
     {
         $url = Config::get('constants.url.motorcycles.last_2days');
+        $pageData = (new Scraper($url))->scrapeSinglePage($url);
 
-        $pageData = Scraper::scrapeSinglePage($url);
-
-        $pageData->each(function($entry) {
-            if (Advertisement::where('ss_id', $entry['ss_id'])->first()) {
-                return false;
-            }
-
-            Advertisement::create($entry);
-        });
+        CreateAdvertisement::dispatch($pageData);
 
         return response()->json(['status' => 200]);
     }
