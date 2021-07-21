@@ -20,6 +20,6 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => '/v2'], function () {
     Route::get('/ads', [AdvertisementController::class, 'index']);
     Route::get('/ads/scrape', [AdvertisementController::class, 'store']);
-    Route::get('/ads/scrape-all', [AdvertisementAllController::class, 'store']);
+    Route::get('/ads/scrape-all', [AdvertisementAllController::class, 'store'])->name('api.scrapeall');
     Route::get('/ads/{id}', [AdvertisementController::class, 'show']);
 });

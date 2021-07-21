@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\CreateAdvertisement;
-use App\Models\Advertisement;
 use App\Services\Scraper;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Weidner\Goutte\GoutteFacade as Goutte;
 
 class AdvertisementAllController extends Controller
 {
@@ -24,7 +21,7 @@ class AdvertisementAllController extends Controller
             CreateAdvertisement::dispatch($this->scrapeAllAdvertPages($scraper, $links));
         });
 
-        return response()->json(['status' => 200]);
+        return back()->with('msg', 'success');
     }
 
     private function scrapeAllAdvertPages(Scraper $scraper, array $links): Collection
